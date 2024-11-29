@@ -5,5 +5,6 @@ app_name = "account_app"
 urlpatterns = [
     path('login/', views.UserLogin.as_view(), name='user_login'),
     path('register/', views.UserRegisterView.as_view(), name='user_regester'),
-    path('verify/', views.UserRigesterVeriyfyCodeView.as_view(), name='verify_code')
+    path('verify/', views.UserRigesterVeriyfyCodeView.as_view(), name='verify_code'),
+    path('logout/', views.UserLogoutView.as_view(), name='user_logout'),
 ]

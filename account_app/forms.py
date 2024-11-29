@@ -113,7 +113,7 @@ class UserLoginForm(forms.Form):
     phone = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
 class LoginForm(forms.Form):
-    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     # slug = forms.SlugField() 
   
@@ -129,16 +129,18 @@ class LoginForm(forms.Form):
     #     return phone
     
     
-def clean(self):
-    cd = super().clean()
-    phone = cd['phone']
-    if len (phone) > 11:
+def clean_username(self):
+    username = self.clean_data.get('username')
+    
+    if len (username) > 11:
         raise ValidationError(
         ("Invalid value: %(value)s is invalid"),
          code="invalid",
-         params={"value": f'{phone}'},
-)
+         params={"value": f'{username}'},
+        )
+    return username
        
        
 class VerifyCodeForm(forms.Form):
     code = forms.IntegerField()
+    

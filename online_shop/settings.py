@@ -134,3 +134,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'account_app.User'
+AUTHENTICATION_BACKENS = ['django.contrib.auth.backends.ModelBackend',
+                        'account_app.authentication.EmailAuthBackend',]
+                          
+                          
+

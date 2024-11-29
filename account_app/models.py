@@ -81,6 +81,7 @@ class User(AbstractBaseUser):
 
 
 class OtpCode(models.Model):
+   
     phone_number = models.CharField(max_length=11, unique=True)
     code = models.PositiveSmallIntegerField()
     created = models.DateTimeField(auto_now=True)
@@ -92,4 +93,4 @@ class OtpCode(models.Model):
     
 class UserSession(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, unique=True)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE)  
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, unique=True)  

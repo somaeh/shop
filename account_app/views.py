@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from account_app.forms import UserResitrationForm
 
 from .forms import LoginForm, VeriFycodeForm
@@ -11,6 +11,10 @@ from django.contrib import messages
 from .models import User
 from django.contrib.sessions.models import Session
 from .models import  UserSession
+from django.utils.crypto import get_random_string
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
 class UserLogin(View):
     def get(self, request):
         form = LoginForm()
@@ -19,14 +23,14 @@ class UserLogin(View):
         form = LoginForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            user = authenticate(username=cd['phone'], password=cd['password'])
+            user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
-                login(request, user)
-                return redirect("/")
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect("home_app:home")
             else:
-                form.add_error("phone", 'invalid user data')
+                form.add_error("username", 'invalid user data')
         else:
-            form.add_error("phone", "invalid data")
+            form.add_error("username", "invalid data")
             return render(request, 'account_app/login.html', {'form':form})
 
 class UserRegisterView(View):
@@ -56,7 +60,7 @@ class UserRegisterView(View):
             }
             messages.success(request, 'we send you a code', extra_tags='success')
             return redirect('account_app:verify_code')
-        return redirect('home_app:home')
+        return render(request, 'account_app/register.html', {'form': form})
         
 class UserRigesterVeriyfyCodeView(View):
     form_class = VeriFycodeForm
@@ -79,8 +83,14 @@ class UserRigesterVeriyfyCodeView(View):
             else:
                 messages.error(request, 'this code is wromg', extra_tags='danger')
                 return redirect('account_app:verify_code')
-            return redirect('home_app:home')
-                
+            return render('home_app:home')
+        
+        
+class UserLogoutView(View, LoginRequiredMixin):
+    def get(self ,request):
+        logout(request)
+        messages.success(request, 'user logout successfully', extra_tags='success')
+        return redirect('home_app:home')
                 
        
      
